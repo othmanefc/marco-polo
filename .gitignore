@@ -1,0 +1,10 @@
+# Ignore datasets
+datasets/queries
+datasets/collections
+#env
+env-marco
+#vscode
+.vscode
+#pycache
+__pycache__
+
