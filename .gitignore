@@ -1,6 +1,7 @@
 # Ignore datasets
 datasets/queries
-datasets/collections
+datasets/collection
+datasets/qrels
 #env
 env-marco
 #vscode
