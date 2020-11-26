@@ -13,7 +13,7 @@ class BM25(object):
                  corpus: List[str],
                  k1: float = 1.5,
                  b: float = 0.75,
-                 delta: float = 0.5) -> None:
+                 delta: float = -1.5) -> None:
         self.k1 = k1
         self.b = b
         self.delta = delta
