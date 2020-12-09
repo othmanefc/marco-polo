@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "env-marco/bin/python",
+    "git.ignoreLimitWarning": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.mypyEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": false
+}

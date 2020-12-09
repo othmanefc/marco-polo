@@ -2,10 +2,12 @@
 datasets/queries
 datasets/collection
 datasets/qrels
+datasets/datasets
 #env
 env-marco
-#vscode
-.vscode
 #pycache
 __pycache__
+.mypy_cache
+#.swp
+*.swp
 
