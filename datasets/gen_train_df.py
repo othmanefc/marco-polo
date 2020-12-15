@@ -1,5 +1,3 @@
-import os
-import time
 import argparse
 from tqdm import tqdm
 
@@ -7,9 +5,8 @@ import tensorflow as tf
 import tensorflow_hub as hub
 
 from datasets import tokenization
-from datasets.utils import (check_file_exists, download_file, create_dir,
-                            extract_file)
-from src.preprocesser import Query, Preprocesser
+from datasets.utils import check_file_exists, create_dir
+from src.preprocesser import Preprocesser
 
 HUB_PATH = 'https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1'
 parser = argparse.ArgumentParser(
@@ -76,22 +73,22 @@ def write_to_tf_record(writer,
 
 def convert_train_ds(tokenizer):
     if not check_file_exists(args.train_ds_path):
-        raise Exception(
+        raise ValueError(
             "train set not found please download it or specify right folder..")
     print('Converting Train to TfRecord...')
     print('Counting number of examples...')
-    num_lines = sum(1 for line in open(args.train_ds_path))
+    num_lines = sum(1 for _ in open(args.train_ds_path))
     print(f"{num_lines} Samples found...")
     writer = tf.io.TFRecordWriter(args.output_folder + "/train_ds.tf")
     max_train_examples = num_lines
     if args.max_train_examples:
-        max_number_examples = min(max_number_examples, args.max_train_examples)
+        max_train_examples = min(max_train_examples, args.max_train_examples)
     print("Only processing {} % of the training set...".format(
         100 * max_train_examples / num_lines))
     with open(args.train_ds_path, "r") as file:
         pbar = tqdm(enumerate(file), total=num_lines)
         for i, line in pbar:
-            if i > max_number_examples:
+            if i > max_train_examples:
                 print("Limit reached...")
                 break
             query, pos_doc, neg_doc = line.rstrip().split('\t')

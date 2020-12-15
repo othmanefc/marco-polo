@@ -1,8 +1,12 @@
 {
     "python.pythonPath": "env-marco/bin/python",
     "git.ignoreLimitWarning": true,
+    "python.formatting.provider": "yapf",
+    "python.formatting.yapfArgs": [
+        "--style={based_on_style: google, indent_width:4, column_limit:79}"
+    ],
     "python.linting.pylintEnabled": false,
     "python.linting.mypyEnabled": true,
     "python.linting.enabled": true,
-    "python.linting.flake8Enabled": false
+    "python.linting.flake8Enabled": true
 }

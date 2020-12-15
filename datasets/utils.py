@@ -11,10 +11,12 @@ def check_file_exists(path):
         return False
     return os.path.isfile(path)
 
+
 def check_dir_exists(path):
     if not path:
         return False
     return os.path.isdir(path)
+
 
 def create_dir(path):
     if not os.path.exists(path):

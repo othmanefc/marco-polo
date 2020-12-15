@@ -1,26 +1,34 @@
-import numpy as np
+from datetime import datetime
+import os
+
 import tensorflow as tf
 import tensorflow_hub as hub
-from tensorflow.keras.layers import Dense, Input,
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras import Model
+
+from src.optimizer import AdamWarmup
+from datasets.utils import create_dir
 
 
 class Bert(object):
-    def __init__(self,
-                 hub_handle: str,
-                 max_seq_length: int = 256,
-                 lr: float = 0.01):
+
+    def __init__(
+        self,
+        hub_handle: str,
+        max_seq_length: int = 256,
+    ):
         self.bert_layer = hub.KerasLayer(hub_handle, trainable=True)
         self.max_seq_length = max_seq_length
 
-    def build_model(self, num_labels):
-        input_word_ids = Input(shape=(self.max_seq_length, ),
+    def build_model(self, num_labels: int, lr: float, decay_steps: int,
+                    warmup_steps: int, weight_decay: float) -> tf.keras.Model:
+        input_word_ids = Input(shape=(self.max_seq_length,),
                                dtype=tf.int32,
                                name="input_word_ids")
-        input_mask = Input(shape=(self.max_seq_length, ),
+        input_mask = Input(shape=(self.max_seq_length,),
                            dtype=tf.int32,
                            name="input_mask")
-        segment_ids = Input(shape=(self.max_seq_length, ),
+        segment_ids = Input(shape=(self.max_seq_length,),
                             dtype=tf.int32,
                             name="segment_ids")
 
@@ -31,7 +39,24 @@ class Bert(object):
 
         model = Model(inputs=[input_word_ids, input_mask, segment_ids],
                       outputs=out)
-        optimizer = SGD(learning_rate=self.lr, momentum=0.8)
+        optimizer = AdamWarmup(lr=lr,
+                               decay_steps=decay_steps,
+                               warmup_steps=warmup_steps,
+                               weight_decay=weight_decay)
         model.compile(loss='SparseCategoricalCrossentropy',
                       optimizer=optimizer,
-                      metrics=['accuracy'])
+                      metrics=['accuracy'], 
+                      callbacks=[self.get_checkpoint()])
+        return model
+
+    def get_checkpoint(self,):
+        date_now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        checkpoint_dir = create_dir(os.path.join("models", f"BERT_{date_now}"))
+        file = os.path.join(checkpoint_dir,
+                            "weights.{epoch:02d}-{val_loss:.2f}.hdf5")
+        model_checkpoint = tf.keras.callbacks(filepath=file,
+                                              monitor="loss",
+                                              verbose=1,
+                                              save_best_only=True,
+                                              mode="min")
+        return model_checkpoint
