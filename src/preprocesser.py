@@ -11,6 +11,7 @@ from datasets.tokenization import FullTokenizer
 
 nltk.download("wordnet")
 nltk.download('punkt')
+nltk.download('stopwords')
 
 
 class Preprocesser(object):
