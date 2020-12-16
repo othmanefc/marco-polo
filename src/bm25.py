@@ -5,7 +5,7 @@ import numpy as np
 from statistics import mean
 from rank_bm25 import BM25L
 
-from preprocesser import Corpus, Query
+from src.preprocesser import Corpus, Query
 
 
 class BM25(object):

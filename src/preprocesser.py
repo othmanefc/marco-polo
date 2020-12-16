@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Callable
+from typing import List, Dict, Union
 import string
 import six
 
@@ -14,7 +14,8 @@ nltk.download('punkt')
 
 
 class Preprocesser(object):
-    def __init__(self, ) -> None:
+
+    def __init__(self,) -> None:
         self.stopwords = set(stopwords.words("english"))
 
     def lower_case(self, text: str) -> str:
@@ -59,8 +60,6 @@ class Preprocesser(object):
         elif six.PY2:
             if isinstance(text, str):
                 return text.decode("utf-8", "ignore")
-            elif isinstance(text, unicode):
-                return text
             else:
                 raise ValueError("Unsupported string type: %s" % (type(text)))
         else:
@@ -68,6 +67,7 @@ class Preprocesser(object):
 
 
 class Corpus(Preprocesser):
+
     def __init__(self,
                  corpus: Dict[int, str],
                  do_sw: bool = True,
@@ -85,13 +85,16 @@ class Corpus(Preprocesser):
         for pid, doc in self.corpus.items():
             doc = self.remove_punctuation(self.lower_case(doc))
             doc_tokened = self.tokenize(doc)
-            if do_sw: doc_tokened = self.clean_stopwords(doc_tokened)
-            if lemmatize: doc_tokened = self.lemmatize(doc_tokened)
+            if do_sw:
+                doc_tokened = self.clean_stopwords(doc_tokened)
+            if lemmatize:
+                doc_tokened = self.lemmatize(doc_tokened)
             docs_tokens[pid] = doc_tokened
         return docs_tokens
 
 
 class Query(Preprocesser):
+
     def __init__(self,
                  qid: int,
                  query: str,
@@ -106,8 +109,10 @@ class Query(Preprocesser):
     def preprocess(self, do_sw: bool, lemmatize: bool) -> List[str]:
         query = self.remove_punctuation(self.lower_case(self.query))
         query_tokened = self.tokenize(query)
-        if do_sw: query_tokened = self.clean_stopwords(query_tokened)
-        if lemmatize: query_tokened = self.lemmatize(query_tokened)
+        if do_sw:
+            query_tokened = self.clean_stopwords(query_tokened)
+        if lemmatize:
+            query_tokened = self.lemmatize(query_tokened)
         return query_tokened
 
     def update_answers(self, new_answers: Dict[int, float], n: int):

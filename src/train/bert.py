@@ -10,7 +10,7 @@ from src.train.optimizer import AdamWarmup
 from datasets.utils import create_dir
 
 
-class Bert(object):
+class Bert:
 
     def __init__(
         self,
