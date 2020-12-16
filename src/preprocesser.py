@@ -25,7 +25,7 @@ class Preprocesser(object):
     def remove_punctuation(self, text: str) -> str:
         text = text.translate(
             str.maketrans(string.punctuation, ' ' * len(string.punctuation)))
-        return text
+        return " ".join(text.split())
 
     def lemmatize(self, tokens: List[str]) -> List[str]:
         return [lemma().lemmatize(word=w, pos="v") for w in tokens]
