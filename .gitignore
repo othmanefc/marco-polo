@@ -3,6 +3,7 @@ datasets/queries
 datasets/collection
 datasets/qrels
 datasets/datasets
+models/
 #env
 env-marco
 #pycache

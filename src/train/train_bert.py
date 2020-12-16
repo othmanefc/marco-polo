@@ -3,7 +3,7 @@ import argparse
 
 import tensorflow as tf
 
-from src.bert import Bert
+from src.train.bert import Bert
 from datasets.utils import check_file_exists
 
 BERT_MODEL = "bert_en_uncased_L-12_H-768_A-12"
@@ -19,6 +19,7 @@ parser.add_argument("--decay_steps", type=int, default=30000)
 parser.add_argument("--warmup_steps", type=int, default=3000)
 parser.add_argument("--weight_decay", type=float, default=1e-3)
 parser.add_argument("--epochs", type=int, default=3)
+parser.add_argument("--steps_per_epoch", type=int, default=40000)
 
 args = parser.parse_args()
 bert_url = f"https://tfhub.dev/tensorflow/{BERT_MODEL}/2"
@@ -37,6 +38,7 @@ def extract_fn(record):
     return tf.io.parse_single_example(record, features)
 
 
+@tf.function
 def format_fn(record):
     query_ids = tf.cast(record['query_ids'], tf.int32)
     doc_ids = tf.cast(record['doc_ids'], tf.int32)
@@ -98,7 +100,11 @@ def main():
                              warmup_steps=args.warmup_steps,
                              weight_decay=args.weight_decay)
     print(model.summary())
-    model.fit(dataset, epochs=args.epochs, verbose=1, steps_per_epoch=400000)
+    model.fit(dataset,
+              epochs=args.epochs,
+              verbose=1,
+              steps_per_epoch=args.steps_per_epoch,
+              callbacks=bert.callbacks())
 
 
 if __name__ == "__main__":

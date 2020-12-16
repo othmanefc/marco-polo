@@ -20,7 +20,7 @@ def check_dir_exists(path):
 
 def create_dir(path):
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path)
 
 
 def download_file(name, path):
