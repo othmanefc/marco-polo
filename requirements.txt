@@ -2,6 +2,7 @@ nltk==3.5
 numpy==1.18.5
 pandas==1.1.4
 rank-bm25==0.2.1
+sentencepiece==0.1.94
 six==1.15.0
 spm==0.9.1
 tensorboard==2.4.0
