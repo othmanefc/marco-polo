@@ -23,18 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Link flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 80 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=80 --statistics
       - name: Test with pytest
         run: |
           python -m pytest -s -v
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout 
-        uses: actions/checkout@v2
-      - uses: tonybajan/flake8-check-action@v1.0.0
-        with:
-          ignore: E129
-          maxlinelength: 80 
-          repotoken: ${{ secrets.GITHUB_TOKEN }}}
