@@ -3,6 +3,11 @@ CORPUS = {
     2: "I go to the beach",
     3: "the weather is nice today"
 }
+CORPUS_TOKENS = {
+    1: ["love", "pudding"],
+    2: ["go", "beach"],
+    3: ["weather", "nice", "today"]
+}
 
 QUERY = {3000: "What is love ?"}
 QUERY_TOKENS = {3000: ["love"]}

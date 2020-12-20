@@ -35,7 +35,12 @@ class Bert:
         _, sequence_output = self.bert_layer(
             [input_word_ids, input_mask, segment_ids])
         clf_output = sequence_output[:, 0, :]
-        out = Dense(num_labels, activation="softmax")(clf_output)
+        if num_labels == 2:
+            out = Dense(1, activation="sigmoid")(clf_output)
+        elif num_labels > 2:
+            out = Dense(num_labels, activation="softmax")(clf_output)
+        else:
+            raise ValueError("num_labels should be higher than 1")
 
         model = Model(inputs=[input_word_ids, input_mask, segment_ids],
                       outputs=out)
@@ -43,9 +48,14 @@ class Bert:
                                decay_steps=decay_steps,
                                warmup_steps=warmup_steps,
                                weight_decay=weight_decay)
-        model.compile(loss='SparseCategoricalCrossentropy',
-                      optimizer=optimizer,
-                      metrics=['accuracy'])
+        if num_labels == 2:
+            model.compile(loss="binary_crossentropy",
+                          optimizer=optimizer,
+                          metrics=["accuracy"])
+        else:
+            model.compile(loss='SparseCategoricalCrossentropy',
+                          optimizer=optimizer,
+                          metrics=['accuracy'])
 
         return model
 

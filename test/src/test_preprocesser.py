@@ -1,10 +1,11 @@
 import unittest
 
+import numpy as np
 from nltk.corpus import stopwords
 import tensorflow_hub as hub
 
-from src.preprocesser import Preprocesser, Query
-from src.templates import TEXT, QUERY, QUERY_TOKENS
+from src.preprocesser import Preprocesser, Query, Corpus
+from src.templates import TEXT, QUERY, QUERY_TOKENS, CORPUS, CORPUS_TOKENS
 from datasets import tokenization
 
 
@@ -55,6 +56,28 @@ class TestQuery(unittest.TestCase):
     def test_preprocess(self):
         self.assertEqual(self.query.tokens,
                          QUERY_TOKENS.get(list(QUERY.keys())[0]))
+
+    def test_update_answers(self):
+        query = Query(list(QUERY.keys())[0], list(QUERY.values())[0])
+        answers = [(i, np.random.normal(scale=3))
+                   for i in np.random.randint(1000, size=20)]
+
+        query.update_answers(answers,)
+        self.assertEqual(query.answers, sorted(answers, key=lambda x: x[1]))
+
+        new_answers = [(i, np.random.normal(scale=3))
+                       for i in np.random.randint(1000, size=40)]
+        query.update_answers(new_answers, n=10)
+        self.assertEqual(
+            query.answers,
+            sorted(answers + new_answers, key=lambda x: x[1])[:10])
+
+
+class TestCorpus(unittest.TestCase):
+
+    def test_preprocess(self):
+        corpus = Corpus(CORPUS)
+        self.assertEqual(corpus.tokens, CORPUS_TOKENS)
 
 
 if __name__ == '__main__':

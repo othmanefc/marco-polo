@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Tuple
 import string
 import six
 
@@ -104,7 +104,7 @@ class Query(Preprocesser):
         super().__init__()
         self.query = Query.convert_to_unicode(query)
         self.qid = qid
-        self.answers: Dict[int, float] = {}
+        self.answers: List[Tuple[int, float]] = []
         self.tokens = self.preprocess(do_sw, lemmatize)
 
     def preprocess(self, do_sw: bool, lemmatize: bool) -> List[str]:
@@ -116,14 +116,17 @@ class Query(Preprocesser):
             query_tokened = self.lemmatize(query_tokened)
         return query_tokened
 
-    def update_answers(self, new_answers: Dict[int, float], n: int):
+    def update_answers(self,
+                       new_answers: List[Tuple[int, float]],
+                       n: int = None):
+        if not n:
+            n = len(self.answers) + len(new_answers)
         if not self.answers:
-            self.answers = new_answers
+            temp = new_answers
         else:
-            temp = {**self.answers, **new_answers}
-            new = dict(sorted(temp.items(), key=lambda item: item[1]))
-            firstpairs = {k: new[k] for k in list(new)[:n]}
-            self.answers = firstpairs
+            temp = self.answers + new_answers
+        new = sorted(temp, key=lambda tup: tup[1])
+        self.answers = new[:n]
 
 
 if __name__ == "__main__":
