@@ -12,8 +12,8 @@ from src.dataloader import DataLoader
 COLLECTION_PATH = os.environ.get(
     "COLLECTION_PATH", os.path.join("datasets", "datasets", "collection.tsv"))
 
-bc = BertClient(output_fmt='list')
 es = AsyncElasticsearch()
+bc = BertClient(output_fmt='list')
 
 logger = logging.getLogger("bertclient")
 logger.setLevel("INFO")

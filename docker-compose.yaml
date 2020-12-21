@@ -4,7 +4,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     container_name: es
     ports:
-      - 9200:9200
+      - '9200:9200'
     networks:
       - elastic
     volumes:
@@ -12,6 +12,16 @@ services:
     tty: true
     environment:
       discovery.type: single-node
+
+  bert-as-service:
+    build: ./src/bert-server
+    ports:
+      - '9998:9999'
+    environment:
+      - PATH_MODEL=${PATH_MODEL}
+    volumes:
+      - "${PATH_MODEL}:/model"
+
 volumes:
   data01:
     driver: local
