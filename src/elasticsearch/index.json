@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "dynamic": "true",
+    "_source": {
+      "enabled": "true"
+    },
+    "properties": {
+      "pid": {
+        "type": "text"
+      },
+      "passage": {
+        "type": "text"
+      },
+      "text_vector": {
+        "type": "bert_embedding",
+        "dims": 768
+      }
+    }
+  }
+}
