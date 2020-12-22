@@ -4,7 +4,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     container_name: es
     ports:
-      - '9200:9200'
+      - "9200:9200"
     networks:
       - elastic
     volumes:
@@ -16,7 +16,8 @@ services:
   bert-as-service:
     build: ./src/bert-server
     ports:
-      - '9998:9999'
+      - "5555:5555"
+      - "5556:5556"
     environment:
       - PATH_MODEL=${PATH_MODEL}
     volumes:

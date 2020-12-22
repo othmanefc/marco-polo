@@ -32,7 +32,7 @@ class TestBM25(unittest.TestCase):
         top_score = self.bm.top_n(self.quer, n=N)
         bml_score = self.bm_base.get_scores(self.quer.tokens)
         bml_top_n = bml_score[::1][:N]
-        np.testing.assert_allclose(list(top_score.values()),
+        np.testing.assert_allclose([score[1] for score in top_score],
                                    bml_top_n,
                                    rtol=2e-3)
 

@@ -2,6 +2,7 @@ import pandas as pd
 
 
 class DataLoader(object):
+
     def __init__(self, path, chunksize, sep="\t", header=None, names=None):
         self.path = path
         self.chunksize = chunksize

@@ -11,4 +11,6 @@ __pycache__
 .mypy_cache
 #.swp
 *.swp
-
+cased_L-12_H-768_A-12*
+*.tar.gz
+*.zip

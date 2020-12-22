@@ -15,8 +15,8 @@
       "passage": {
         "type": "text"
       },
-      "text_vector": {
-        "type": "bert_embedding",
+      "bert_embedding": {
+        "type": "dense_vector",
         "dims": 768
       }
     }

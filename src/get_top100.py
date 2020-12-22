@@ -9,14 +9,16 @@ from preprocesser import Query, Corpus
 from dataloader import DataLoader
 
 QUERIES_PATH = os.environ.get(
-    "QUERIES_PATH", os.path.join("datasets", "queries", "queries.train.tsv"))
+    "QUERIES_PATH",
+    os.path.join("datasets", "datasets", "queries", "queries.train.tsv"))
 
 COLLECTION_PATH = os.environ.get(
-    "COLLECTION_PATH", os.path.join("datasets", "collection",
-                                    "collection.tsv"))
+    "COLLECTION_PATH",
+    os.path.join("datasets", "datasets", "collection", "collection.tsv"))
 
 OUTPUT_PATH = os.environ.get(
-    "OUTPUT_PATH_BM25", os.path.join("datasets", "bm25", "bm25.train.tsv"))
+    "OUTPUT_PATH_BM25",
+    os.path.join("datasets", "datasets", "bm25", "bm25.train.tsv"))
 
 TOP_N = 50
 
@@ -63,8 +65,7 @@ def main():
             collection = reshape_df(collection=collection)
             queries = train_bm25(queries, collection)
         result = dict(result,
-                      **{query.qid: query.answers
-                         for query in queries})
+                      **{query.qid: query.answers for query in queries})
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from typing import Dict, List, Sequence
+from typing import Dict, List, Sequence, Tuple
 
 import math
 import numpy as np
@@ -9,6 +9,7 @@ from src.preprocesser import Corpus, Query
 
 
 class BM25(object):
+
     def __init__(self,
                  corpus: Corpus,
                  k1: float = 1.5,
@@ -51,12 +52,12 @@ class BM25(object):
                 (self.k1 + 1) * (c + self.delta) / (self.k1 + c + self.delta))
         return score
 
-    def top_n(self, query: Query, n: int = None) -> Dict[int, float]:
+    def top_n(self, query: Query, n: int = None) -> List[Tuple[int, float]]:
         if n is None:
             n = len(self.corpus)
         scores = self.score(query)
         top = np.argsort(scores)[::-1][:n]
-        return {self.corpus.pids[i]: scores[i] for i in top}
+        return [(self.corpus.pids[i], scores[i]) for i in top]
 
     def compute_idf(self) -> None:
         for word, freq in self.word_idx.items():

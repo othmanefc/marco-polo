@@ -9,3 +9,5 @@
 - Train it on the dataset
 - Do inference
 - Streamlit front for information retrieval
+
+sudo -E docker compose up -d
