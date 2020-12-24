@@ -3,16 +3,16 @@
 Run the following commands you just need to be in the main directory of the repository
 
 ```bash
-cd path/to/marco-polo
-DATA_DIR=./datasets/datasets
-mkdir ${DATA_DIR}
-wget https://msmarco.blob.core.windows.net/msmarcoranking/triples.train.small.tar.gz -P ${DATA_DIR}
-wget https://msmarco.blob.core.windows.net/msmarcoranking/top1000.dev.tar.gz -P ${DATA_DIR}
-wget https://msmarco.blob.core.windows.net/msmarcoranking/top1000.eval.tar.gz -P ${DATA_DIR} 
+$ cd path/to/marco-polo
+$ DATA_DIR=./datasets/datasets
+$ mkdir ${DATA_DIR}
+$ wget https://msmarco.blob.core.windows.net/msmarcoranking/triples.train.small.tar.gz -P ${DATA_DIR}
+$ wget https://msmarco.blob.core.windows.net/msmarcoranking/top1000.dev.tar.gz -P ${DATA_DIR}
+$ wget https://msmarco.blob.core.windows.net/msmarcoranking/top1000.eval.tar.gz -P ${DATA_DIR} 
 
-tar -xvf ${DATA_DIR}/triples.train.small.tar.gz -C ${DATA_DIR}
-tar -xvf ${DATA_DIR}/top1000.dev.tar.gz -C ${DATA_DIR}
-tar -xvf ${DATA_DIR}/top1000.eval.tar.gz -C ${DATA_DIR}
+$ tar -xvf ${DATA_DIR}/triples.train.small.tar.gz -C ${DATA_DIR}
+$ tar -xvf ${DATA_DIR}/top1000.dev.tar.gz -C ${DATA_DIR}
+$ tar -xvf ${DATA_DIR}/top1000.eval.tar.gz -C ${DATA_DIR}
 ```
 If you want to train the model yourself, you also need to convert the downloaded datasets into a TFRecord for proper training
 

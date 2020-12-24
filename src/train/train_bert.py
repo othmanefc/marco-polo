@@ -18,7 +18,9 @@ parser = argparse.ArgumentParser(description="BERT Training parameters")
 parser.add_argument("--data_dir",
                     type=str,
                     default=os.path.join("datasets", "datasets", "tfrecord"))
-parser.add_argument("--output_dir", type=str, default=os.path.join("datasets", "datasets", "outputs"))
+parser.add_argument("--output_dir",
+                    type=str,
+                    default=os.path.join("datasets", "datasets", "outputs"))
 parser.add_argument("--learning_rate", type=float, default=1e-5)
 parser.add_argument("--batch_size", type=int, default=32)
 parser.add_argument("--max_seq_length", type=int, default=512)
@@ -162,6 +164,7 @@ def main():
                   verbose=1,
                   steps_per_epoch=args.steps_per_epoch,
                   callbacks=bert.callbacks())
+        model.save(os.path.join(args.output_dir, "fine_tuned_model"))
     if args.do_eval:
         logger.info("Evaluating...")
         top_n = min(args.top_n, 1000)

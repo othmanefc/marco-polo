@@ -14,14 +14,16 @@ services:
       discovery.type: single-node
 
   bert-as-service:
-    build: ./src/bert-server
+    build: ./bert-server
     ports:
       - "5555:5555"
       - "5556:5556"
     environment:
       - PATH_MODEL=${PATH_MODEL}
+      - PATH_TUNED=${PATH_TUNED}
     volumes:
       - "${PATH_MODEL}:/model"
+      - "${PATH_TUNED}:/tuned_model"
 
 volumes:
   data01:

@@ -1,6 +1,6 @@
 import logging
 import os
-from tqdm import tqdm
+from tqdm.asyncio import tqdm
 import asyncio
 
 from bert_serving.client import BertClient
@@ -15,29 +15,33 @@ COLLECTION_PATH = os.environ.get(
 es = AsyncElasticsearch()
 bc = BertClient(output_fmt='list')
 
-logger = logging.getLogger("bertclient")
-logger.setLevel("INFO")
+logging.basicConfig(level=logging.INFO)
 
 
 async def map_doc(index_name="documents"):
+    CHUNKSIZE = 1000
     document_loader = DataLoader(COLLECTION_PATH,
-                                 chunksize=10000,
+                                 chunksize=CHUNKSIZE,
                                  names=["pid", "passage"])
-    for collection in tqdm(document_loader.reader, desc="collection"):
-        for i, row in tqdm(collection.iterrows(), total=10000):
+    for n, collection in tqdm(enumerate(document_loader.reader),
+                              desc="collection"):
+        logging.info("Encoding passages...")
+        embeddings = encode(list(collection.passage))
+        if n == 300:
+            break
+        for i, row in collection.iterrows():
             yield {
                 '_op_type': 'index',
                 '_index': index_name,
                 'pid': row.pid,
                 'passage': row.passage,
-                'embedding': bc.encode([row.passage])
+                'bert_embedding': embeddings[i % CHUNKSIZE]
+                # for some reason i doesn't reset each iteration
             }
-        # with open('docs.jsonl', "w+") as doc_file:
-        #     docs = []
-        #     for i, row in collection.iterrows():
-        #         mapp = map_doc(row['pid'], row['passage'], embeddings[i])
-        #         docs.append(mapp)
-        #         doc_file.write(json.dumps(mapp) + '\n')
+
+
+def encode(passages):
+    return bc.encode(passages)
 
 
 async def main():
@@ -45,5 +49,7 @@ async def main():
 
 
 if __name__ == "__main__":
+    logging.info("Starting indexation of documents...")
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
+    logging.info("indexation done...")

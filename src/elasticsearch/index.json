@@ -17,7 +17,7 @@
       },
       "bert_embedding": {
         "type": "dense_vector",
-        "dims": 768
+        "dims": 256
       }
     }
   }
