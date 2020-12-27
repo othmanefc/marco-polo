@@ -18,8 +18,8 @@ def query(query: str):
             },
             "script": {
                 "source":
-                    "cosineSimilarity(params.query_vector, 'bert_embedding'"
-                    ") + 1.0",
+                "cosineSimilarity(params.query_vector, 'bert_embedding'"
+                ") + 1.0",
                 "params": {
                     "query_vector": query_vector
                 }
