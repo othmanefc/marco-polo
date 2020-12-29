@@ -13,11 +13,8 @@
         "type": "text"
       },
       "passage": {
-        "type": "text"
-      },
-      "bert_embedding": {
-        "type": "dense_vector",
-        "dims": 256
+        "type": "text",
+        "analyzer": "english"
       }
     }
   }
