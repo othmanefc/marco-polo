@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 from src.predict import Predict
 
 
@@ -15,7 +17,7 @@ class TestPredict(unittest.TestCase):
                                                       return_tensors='tf',
                                                       max_length=128,
                                                       truncation='only_second',
-                                                      paddin=True)
+                                                      padding=True)
         tokens_batch = list(
             map(self.pred.tokenizer.convert_ids_to_tokens, batch['input_ids']))
         for tokens in tokens_batch:
@@ -27,9 +29,9 @@ class TestPredict(unittest.TestCase):
         self.assertIsNone(self.pred.predict_batch('', []))
         predictions = self.pred.predict_batch(self.question[0], self.answers)
         for pred in predictions:
-            self.assertIsInstance(pred['confidence'], float)
+            self.assertTrue(np.issubdtype(type(pred['confidence']), np.float))
             self.assertIsInstance(pred['full_context'], str)
-            self.assertIsInstance(pred['start'], int)
-            self.assertIsInstance(pred['end'], int)
+            self.assertTrue(np.issubdtype(type(pred['start']), np.integer))
+            self.assertTrue(np.issubdtype(type(pred['end']), np.integer))
             self.assertTrue(pred['answer'] in pred['full_context'])
     
