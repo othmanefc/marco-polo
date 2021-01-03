@@ -3,8 +3,8 @@ bert-serving-client==1.10.0
 elasticsearch==7.10.1
 flask==1.1.2
 nltk==3.5
-numpy==1.18.5
-pandas==1.1.4
+numpy==1.19.2
+pandas==1.2.0
 rank-bm25==0.2.1
 sentencepiece==0.1.94
 six==1.15.0
