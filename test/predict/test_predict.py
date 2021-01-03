@@ -18,9 +18,11 @@ class TestPredict(unittest.TestCase):
                                                       padding=True)
         tokens_batch = list(
             map(self.pred.tokenizer.convert_ids_to_tokens, batch['input_ids']))
-        for tokens in tokens_batch:
+        for i, tokens in enumerate(tokens_batch):
             rec = self.pred._reconstruct_text(tokens)
-            self.assertEqual(tokens, rec)
+            seq_str = " ".join(seqs[i])
+            seq_str = "[CLS] " + seq_str
+            self.assertEqual(seq_str, rec)
             self.assertTrue(all(isinstance(s, str) for s in rec))
 
     def test_predict_batch(self):
