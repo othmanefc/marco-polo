@@ -7,8 +7,48 @@ pred = Predict()
 
 
 @st.cache
+<<<<<<< HEAD
 def search(pred: Predict, query: str):
     return pred.search(query, n_answers=SEARCH_SIZE)
+=======
+def query(query: str):
+    bc = BertClient(output_fmt='list')
+    es = Elasticsearch('localhost:9200')
+
+    query_vector = bc.encode([query])[0]
+    script_params = {
+        "script_score": {
+            "query": {
+                "match_all": {}
+            },
+            "script": {
+                "source":
+                "cosineSimilarity(params.query_vector, 'bert_embedding'"
+                ") + 1.0",
+                "params": {
+                    "query_vector": query_vector
+                }
+            }
+        }
+    }
+
+    docs = es.search(index="documents",
+                     body={
+                         "size": SEARCH_SIZE,
+                         "query": script_params,
+                         "_source": {
+                             "includes": ["pid", "passage"]
+                         }
+                     })
+    return docs
+
+
+def parse_result(json):
+    results = json['hits']['hits']
+    assert len(results) == SEARCH_SIZE
+    for hit in results:
+        yield hit['_source']
+>>>>>>> main
 
 
 if __name__ == "__main__":

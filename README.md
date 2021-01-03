@@ -9,6 +9,7 @@
 - Virtualenv
 
 
+<<<<<<< HEAD
 ## Training Model from MS Marco Task
 
 You can train a model to accomplish MS Marco task:
@@ -49,6 +50,9 @@ And if you prefer, you can also download the tfrecord files yourself, from [here
 
 You need to download a pretrained BERT model, you can find [here](https://github.com/google-research/bert). If you have a good enough computer and GPU, we will use Bert Base
 
+=======
+### 1. Download Pretrained BERT
+>>>>>>> main
 
 ```bash
 $ wget https://storage.googleapis.com/bert_models/2020_02_20/uncased_L-12_H-768_A-12.zip
@@ -92,7 +96,7 @@ $ docker-compose up
 
 ### Index documents
 
-You need to index documents onto the elasticsearch cluster. So, first create the index, it will use the mapping for src/elasticsearch/index.json:
+You need to index documents onto the elasticsearch cluster. So, first create the index, it will use the mapping for src/elasticsearch/index.json, specify the right length for the dense vector depending on the size of the BERT Model used:
 
 ```bash
 $ python3 src/elasticsearch/src/create_index.py
@@ -112,9 +116,13 @@ $ python3 -m src.elasticsearch.feed
 ```
 As it can take a long time to index all the documents, you can go to the next part while it's still processing.
 
+<<<<<<< HEAD
 ### Run the App
 
 #### Flask
+=======
+### 6. Run the App
+>>>>>>> main
 
 Last thing is to start the app, which you can do using the following command
 By default the app should be at: http://localhost:8300/
