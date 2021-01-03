@@ -103,12 +103,12 @@ class Predict:
                                             answer_end + 2)
             ans = {
                 'answer': answer,
-                'start': answer_start,
-                'end': answer_end,
+                'start': int(answer_start),
+                'end': int(answer_end),
                 'full_context': full_txt
             }
-            ans['confidence'] = (start_scores[i, answer_start] +
-                                 end_scores[i, answer_end]).numpy()
+            ans['confidence'] = float((start_scores[i, answer_start] +
+                                       end_scores[i, answer_end]).numpy())
             answers.append(ans)
         return answers
 

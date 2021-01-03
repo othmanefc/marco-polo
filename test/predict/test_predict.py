@@ -1,7 +1,5 @@
 import unittest
 
-import numpy as np
-
 from src.predict import Predict
 
 
@@ -12,7 +10,7 @@ class TestPredict(unittest.TestCase):
     answers = ['I love food', 'I drink water']
 
     def test__reconstruct_text(self):
-        seqs = [[self.question, ans] for ans in self.answers]
+        seqs = [[self.question[0], ans] for ans in self.answers]
         batch = self.pred.tokenizer.batch_encode_plus(seqs,
                                                       return_tensors='tf',
                                                       max_length=128,
@@ -29,9 +27,11 @@ class TestPredict(unittest.TestCase):
         self.assertIsNone(self.pred.predict_batch('', []))
         predictions = self.pred.predict_batch(self.question[0], self.answers)
         for pred in predictions:
-            self.assertTrue(np.issubdtype(type(pred['confidence']), np.float))
+            self.assertTrue(
+                all(bb in list(pred.keys()) for bb in
+                    ['confidence', 'full_context', 'start', 'end', 'answer']))
+            self.assertIsInstance(pred['confidence'], float)
             self.assertIsInstance(pred['full_context'], str)
-            self.assertTrue(np.issubdtype(type(pred['start']), np.integer))
-            self.assertTrue(np.issubdtype(type(pred['end']), np.integer))
+            self.assertIsInstance(pred['start'], int)
+            self.assertIsInstance(pred['end'], int)
             self.assertTrue(pred['answer'] in pred['full_context'])
-    
