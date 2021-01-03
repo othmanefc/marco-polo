@@ -5,6 +5,7 @@ env-marco
 #pycache
 __pycache__
 .mypy_cache
+tmp
 #.swp
 *.swp
 cased_L-12_H-768_A-12*
