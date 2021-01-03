@@ -1,6 +1,7 @@
 aiohttp==3.7.3
 bert-serving-client==1.10.0
 elasticsearch==7.10.1
+flask==1.1.2
 nltk==3.5
 numpy==1.18.5
 pandas==1.1.4
@@ -9,7 +10,7 @@ sentencepiece==0.1.94
 six==1.15.0
 spm==0.9.1
 tensorboard==2.4.0
-tensorflow==2.3.1
+tensorflow==2.4.0
 tensorflow-gpu==2.3.1
 tensorflow-hub==0.10.0
 tqdm==4.53.0

@@ -71,6 +71,8 @@ class Predict:
         return ''.join(new_list)
 
     def predict_batch(self, question, passages):
+        if not question or not passages:
+            return
         seqs = [[question, doc] for doc in passages]
         logging.info("Encoding sequences...")
         batch = self.tokenizer.batch_encode_plus(seqs,
