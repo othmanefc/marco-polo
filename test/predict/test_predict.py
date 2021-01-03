@@ -21,7 +21,7 @@ class TestPredict(unittest.TestCase):
         for i, tokens in enumerate(tokens_batch):
             rec = self.pred._reconstruct_text(tokens)
             seq_str = " ".join(seqs[i])
-            seq_str = "[CLS] " + seq_str
+            seq_str = "[CLS] " + seq_str.lower()
             self.assertEqual(seq_str, rec)
             self.assertTrue(all(isinstance(s, str) for s in rec))
 
