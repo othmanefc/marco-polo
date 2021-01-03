@@ -17,7 +17,7 @@ $ tar -xvf ${DATA_DIR}/top1000.eval.tar.gz -C ${DATA_DIR}
 If you want to train the model yourself, you also need to convert the downloaded datasets into a TFRecord for proper training
 
 ```bash
-python -m datasets.train_ds \
+python -m datasets.gen_tfrecordss \
         --output_folder=${DATA_DIR}/tfrecord \
         --train_ds_path=${DATA_DIR}/triples.train.small.tsv \
         --max_seq_length=256

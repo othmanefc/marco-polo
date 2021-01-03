@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 def query(question, var='passage', size=10):
     logging.info('Searching on ES cluster...')
-    script_params = {"query": {"match": {var: question}}}
+    script_params = {"match": {var: question}}
     docs = es.search(index="documents",
                      body={
                          "size": size,
@@ -76,16 +76,16 @@ class Predict:
         batch = self.tokenizer.batch_encode_plus(seqs,
                                                  return_tensors='tf',
                                                  max_length=512,
-                                                 trunaction='only_second',
+                                                 truncation='only_second',
                                                  padding=True)
         logging.info('Enconding done...')
         tokens_batch = list(
             map(self.tokenizer.convert_ids_to_tokens, batch['input_ids']))
-        logging.info('outputing from model...')
-        start_scores, end_scores = self.model(batch['input_ids'],
-                                              batch['attention_mask'],
-                                              batch['token_type_ids'])
-        logging.info('outputing done...')
+        logging.info('outputting from model...')
+        model_output = self.model(batch['input_ids'], batch['attention_mask'],
+                                  batch['token_type_ids'])
+        start_scores, end_scores = model_output[0], model_output[1]
+        logging.info('outputting done...')
         start_scores = start_scores[:, 1:-1]  # skipping SEP and CLS
         end_scores = end_scores[:, 1:-1]
         answer_starts = np.argmax(start_scores, axis=1)
@@ -115,6 +115,7 @@ class Predict:
 
     def search(self, question, n_answers=10, batch_size=8, size_query=50):
         doc_results = self.query(question, size=size_query)
+        print(doc_results)
         if len(doc_results) == 0:
             return []
 
@@ -126,7 +127,8 @@ class Predict:
         num_chunks = (len(passages) // batch_size) + 1
         batches = Predict._chunks(passages, num_chunks)
         answers = []
-        for batch in batches:
+        for i, batch in enumerate(batches):
+            logging.info(f'Processing batch {i+1}...')
             predictions = self.predict_batch(question, batch)
             for ans in predictions:
                 answers.append(ans)
