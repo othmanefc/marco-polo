@@ -115,7 +115,12 @@ As it can take a long time to index all the documents, you can go to the next pa
 
 #### Flask
 
-Last thing is to start the app, which you can do using the following command
+Last thing is to start the app, which you can do using the following command:
+
+```bash
+$ python3 -m web.app_fl
+```
+
 By default the app should be at: http://localhost:8300/
 
 An example below:
