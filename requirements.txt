@@ -14,4 +14,5 @@ tensorflow==2.4.0
 tensorflow-gpu==2.4.0
 tensorflow-hub==0.10.0
 tqdm==4.53.0
+transformers==4.1.1
 wget==3.2
