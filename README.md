@@ -1,4 +1,5 @@
 # Information retrieval using BERT and MS Marco Datasets
+> by Othmane Hassani & Antoine Lajoinie
 
 ## Prerequisites
 
