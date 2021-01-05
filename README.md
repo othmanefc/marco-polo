@@ -64,13 +64,21 @@ $ unzip uncased_L-12_H-768_A-12.zip
 Afterward, you can fine-tune the model using either the [Kaggle](https://www.kaggle.com/lemartiens/ranking-msmarco/notebook) or locally with scripts available. We have many parameters here:
 
 `learning rate` : (default to 1e-5) This default value is generally the standard for BERT tasks, you can maybe try 2e-5 or 3e-5 too.
+
 `batch_size`: (default to 8) A higher batch size would probably not fit into memory.
+
 `max_seq_length`: (default to 512) This parameter can also be lower depending on the GPU available for training.
+
 `decay_steps`: (default to 30000) Number of steps where the learning rate will decay.
+
 `warmup_steps`: (default to 3000) Number of steps where the learning rate will increase to the specified learning rate from 0.
+
 `weight_decay`: (default to 1e-3) This paramater is an additional term in the weight update rule that causes the weights to exponentially decay to zero.
+
 `epochs`: (default to 3) You can probably only use one epoch as the data feeding is shuffled and repeated.
+
 `steps_per_epochs`: (default to 40000) Number of training steps per epoch.
+
 `top_n`: (default to 10) Number of eval docs per query to keep (should be kept at 10, since we use MRR@10).
 
 **Fine-tune the model:**
