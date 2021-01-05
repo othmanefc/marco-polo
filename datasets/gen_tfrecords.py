@@ -1,3 +1,4 @@
+import logging
 import argparse
 import collections
 from tqdm import tqdm
@@ -20,6 +21,10 @@ parser.add_argument("--train_ds_path",
                     default="datasets/datasets/triples.train.small.tsv",
                     help="path to training dataset",
                     type=str)
+parser.add_argument("--eval_ds_path",
+                    default="datasets/datasets/top1000.eval.tsv",
+                    help="path to training dataset",
+                    type=str)
 parser.add_argument("--bert_model_hub",
                     help="Bert Model from HUB",
                     default=HUB_PATH,
@@ -30,10 +35,15 @@ parser.add_argument(
     default=256,
 )
 parser.add_argument("--max_train_examples",
-                    default=None,
+                    default=500000,
                     help="number of observations to be processed",
                     type=int)
+parser.add_argument("--num_eval_docs",
+                    default=10,
+                    help="number of docs per queries",
+                    type=int)
 args = parser.parse_args()
+logging.basicConfig(level=logging.INFO)
 
 
 def write_to_tf_record(writer,
@@ -77,21 +87,21 @@ def convert_train_ds(tokenizer):
     if not check_file_exists(args.train_ds_path):
         raise ValueError(
             "train set not found please download it or specify right folder..")
-    print('Converting Train to TfRecord...')
-    print('Counting number of examples...')
+    logging.info('Converting Train to TfRecord...')
+    logging.info('Counting number of examples...')
     num_lines = sum(1 for _ in open(args.train_ds_path))
-    print(f"{num_lines} Samples found...")
+    logging.ingo(f"{num_lines} Samples found...")
     writer = tf.io.TFRecordWriter(args.output_folder + "/train_ds.tf")
     max_train_examples = num_lines
     if args.max_train_examples:
         max_train_examples = min(max_train_examples, args.max_train_examples)
-    print("Only processing {} % of the training set...".format(
+    logging.info("Only processing {} % of the training set...".format(
         100 * max_train_examples / num_lines))
     with open(args.train_ds_path, "r") as file:
         pbar = tqdm(enumerate(file), total=num_lines)
         for i, line in pbar:
             if i > max_train_examples:
-                print("Limit reached...")
+                logging.warning("Limit reached...")
                 break
             query, pos_doc, neg_doc = line.rstrip().split('\t')
             write_to_tf_record(writer=writer,
@@ -105,22 +115,23 @@ def convert_train_ds(tokenizer):
 def convert_eval_ds(tokenizer):
     if not check_file_exists(args.eval_ds_path):
         raise ValueError(
-            "train set not found please download it or specify right folder")
-    print('Converting Eval to TfRecord...')
+            "eval set not found please download it or specify right folder")
+    logging.info('Converting Eval to TfRecord...')
     queries_docs = collections.defaultdict(list)
     query_map = {}
     eval_file = open(args.eval_ds_path, 'r')
     for i, line in enumerate(eval_file):
         query_id, doc_id, query, doc = line.strip().split('\t')
         label = 0  # Placeholder
-        queries_docs[query_id].append([doc_id, doc, label])
+        if len(queries_docs[query_id]) <= args.num_eval_docs:
+            queries_docs[query_id].append([doc_id, doc, label])
         query_map[query_id] = query
     eval_file.close()
     for idd, doc in queries_docs.items():
         queries_docs[idd] = doc + max(
             0, args.num_eval_docs - len(doc)) * [('000000000', 'FAKE DOC', 0)]
     writer = tf.io.TFRecordWriter(args.output_folder + "/eval_ds.tf")
-    map_ids_file = open(args.output_folder + "/query_doc_ids_eval.txt")
+    map_ids_file = open(args.output_folder + "/query_doc_ids_eval.txt", "w+")
     for i, (query_id, docs) in tqdm(enumerate(queries_docs.items())):
         doc_ids, docs, labels = zip(*docs)
         query = query_map[query_id]
@@ -137,9 +148,9 @@ def convert_eval_ds(tokenizer):
 
 
 if __name__ == "__main__":
-    print("downloading layer...")
+    logging.info("downloading layer...")
     bert_layer = hub.KerasLayer(args.bert_model_hub, trainable=True)
-    print("Layer downloaded...")
+    logging.info("Layer downloaded...")
     vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
     do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
     tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
